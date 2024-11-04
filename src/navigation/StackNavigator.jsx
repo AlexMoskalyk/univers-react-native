@@ -4,29 +4,48 @@ import RegistrationScreen from "../screens/RegistrationScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
 import CommentsScreen from "../screens/CommentsScreen";
 import MapScreen from "../screens/MapScreen";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
+  const isUserLogged = useSelector((state) => state.auth.isLogged);
+  const navigation = useNavigation();
+
+  console.log("USER", isUserLogged);
+
+  useEffect(() => {
+    if (isUserLogged) {
+      navigation.navigate("Home");
+    }
+  }, [isUserLogged, navigation]);
+
   return (
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Register"
-        component={RegistrationScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Home"
-        component={BottomTabNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
+      {isUserLogged ? (
+        <Stack.Screen
+          name="Home"
+          component={BottomTabNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
+      ) : (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegistrationScreen}
+            options={{ headerShown: false }}
+          />
+        </>
+      )}
 
       <Stack.Screen
         options={{

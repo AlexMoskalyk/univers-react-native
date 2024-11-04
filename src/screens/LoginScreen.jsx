@@ -12,26 +12,35 @@ import {
   Platform,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { colors } from "../../styles/global";
+import { loginDB } from "../redux/reducers/authOperations";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const LoginScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [isButtonActive, setButtonActive] = useState(false);
 
-  useEffect(() => {
+  const signIn = () => {
     if (email && password) {
-      setButtonActive(true);
-      return;
+      dispatch(
+        loginDB({
+          inputEmail: email,
+          inputPassword: password,
+        })
+      );
+      reset();
     }
-    setButtonActive(false);
-  }, [email, password]);
+    Alert.alert("Введіть ваші дані!",  [{ text: "Добре" }]);
+  };
 
   const handleEmailChange = (value) => {
     setEmail(value);
@@ -44,13 +53,9 @@ const LoginScreen = ({ navigation, route }) => {
   const showPassword = () => {
     setIsPasswordVisible((prev) => !prev);
   };
-    const reset = () => {
-      setEmail("");
-      setPassword("");
-    };
-
-  const onLogin = () => {
-    navigation.navigate("Home");
+  const reset = () => {
+    setEmail("");
+    setPassword("");
   };
 
   const onSignUp = () => {
@@ -103,7 +108,7 @@ const LoginScreen = ({ navigation, route }) => {
 
             <View style={[styles.innerContainer, styles.buttonContainer]}>
               <Button
-                onPress={onLogin}
+                onPress={signIn}
                 buttonSize="large"
                 isButtonActive={isButtonActive}
               >

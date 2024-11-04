@@ -20,10 +20,14 @@ import { colors, fonts } from "../../styles/global";
 import { useEffect, useState } from "react";
 import ImageBG from "../../assets/images/PhotoBG.jpg";
 import AddAvatar from "../../assets/images/add.png";
+import { useDispatch, useSelector } from "react-redux";
+import { registerDB } from "../redux/reducers/authOperations";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const RegistrationScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,14 +57,27 @@ const RegistrationScreen = ({ navigation, route }) => {
     setPassword("");
   };
 
-  const handleChoosePhoto = () => {};
-
   const onLogin = () => {
     navigation.navigate("Login");
   };
 
-  const onSignUp = () => {
-    navigation.navigate("Home");
+  const signUp = () => {
+    if (!profilePhoto) {
+      Alert.alert("Аватар є обовязковою");
+      return;
+    }
+
+    if (email && password && name && profilePhoto) {
+      dispatch(
+        registerDB({
+          inputEmail: email,
+          inputPassword: password,
+          inputLogin: name,
+          profilePhoto,
+        })
+      );
+      reset();
+    }
   };
 
   const addAvatar = async () => {
@@ -119,16 +136,6 @@ const RegistrationScreen = ({ navigation, route }) => {
                 <Image style={styles.tinyLogo} source={AddAvatar} />
               </TouchableOpacity>
             </View>
-            {/* <TouchableOpacity
-              onPress={handleChoosePhoto}
-              style={styles.avatarContainer}
-            >
-              <ImageBackground style={styles.avatar}>
-                <View style={styles.iconAdd}>
-                  <Text style={styles.innerIcon}>+</Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity> */}
             <Text style={styles.title}>Реєстрація</Text>
             <View style={[styles.innerContainer]}>
               <Input
@@ -157,7 +164,7 @@ const RegistrationScreen = ({ navigation, route }) => {
               <Button
                 buttonSize="large"
                 isButtonActive={isButtonActive}
-                onPress={onSignUp}
+                onPress={signUp}
               >
                 Зареєструватися
               </Button>

@@ -6,19 +6,24 @@ import CreatePostScreen from "../screens/CreatePostScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { colors } from "../../styles/global";
 import LogoutButton from "../components/LogoutButton";
+import { useDispatch } from "react-redux";
+import { logoutDB } from "../redux/reducers/authOperations";
 
 const Tabs = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logoutDB());
+  };
   return (
     <Tabs.Navigator
       screenOptions={({ navigation }) => ({
         headerRightContainerStyle: { paddingRight: 16 },
         headerLeftContainerStyle: { paddingLeft: 16 },
         tabBarLabel: "",
-        headerRight: () => (
-          <LogoutButton onPress={() => navigation.navigate("Login")} />
-        ),
+        headerRight: () => <LogoutButton onPress={handleLogout} />,
       })}
     >
       <Tabs.Screen
