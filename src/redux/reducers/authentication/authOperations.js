@@ -7,7 +7,8 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import { auth, db, storage } from "../../../config";
+import { auth, db, storage } from "../../../../config";
+// import { auth, db, storage } from "../../../../config";
 
 export const registerDB = createAsyncThunk(
   "auth/signup",

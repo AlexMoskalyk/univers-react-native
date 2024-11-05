@@ -1,6 +1,9 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../config";
-import { setUserInfo, clearUserInfo } from "../redux/reducers/authSlice";
+import {
+  setUserInfo,
+  clearUserInfo,
+} from "../redux/reducers/authentication/authSlice";
 
 export const authStateChanged = (dispatch) => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {

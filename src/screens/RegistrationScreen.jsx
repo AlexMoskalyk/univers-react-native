@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import ImageBG from "../../assets/images/PhotoBG.jpg";
 import AddAvatar from "../../assets/images/add.png";
 import { useDispatch, useSelector } from "react-redux";
-import { registerDB } from "../redux/reducers/authOperations";
+import { registerDB } from "../redux/reducers/authentication/authOperations";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 

@@ -14,15 +14,23 @@ import Button from "../components/Button";
 import PhotoCamera from "../components/PhotoCamera";
 import GalleryModal from "../components/GalleryModal";
 import LocationFetcher from "../components/PhotoLocation";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "../redux/reducers/authentication/authSelector";
+import { createPost } from "../redux/reducers/posts/postOperations";
 
 const CreatePostsScreen = ({ navigation }) => {
   const [namePhoto, setNamePhoto] = useState("");
   const [isButtonActive, setButtonActive] = useState(false);
+  const [isButtonTreshActive, setButtonTreshActive] = useState(false);
   const [location, setLocation] = useState(null);
   const [geocode, setGeocode] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isCameraActive, setCameraActive] = useState(false);
+
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const userId = user.uid;
 
   const handleNameChange = (value) => {
     setNamePhoto(value);
@@ -39,6 +47,12 @@ const CreatePostsScreen = ({ navigation }) => {
     } else {
       setButtonActive(false);
     }
+
+    if (namePhoto || location || photoUri) {
+      setButtonTreshActive(true);
+    } else {
+      setButtonTreshActive(false);
+    }
   }, [namePhoto, location, photoUri]);
 
   const reset = () => {
@@ -46,6 +60,24 @@ const CreatePostsScreen = ({ navigation }) => {
     setLocation(null);
     setGeocode(null);
     setPhotoUri(null);
+  };
+
+  const onSubmit = () => {
+    const newPost = {
+      id: Date.now(),
+      userId,
+      namePhoto,
+      location: {
+        geo: geocode,
+        name: location,
+      },
+      imageUrl: photoUri,
+      likes: 0,
+      comments: [],
+    };
+
+    dispatch(createPost({ userId, newPost }));
+    reset();
   };
 
   return (
@@ -129,8 +161,16 @@ const CreatePostsScreen = ({ navigation }) => {
         </Button>
 
         <TouchableOpacity style={styles.treshBtn}>
-          <Button buttonSize="medium">
-            <Feather name="trash-2" size={24} color={colors.alt_text} />
+          <Button
+            buttonSize="medium"
+            onPress={() => reset()}
+            isButtonActive={isButtonTreshActive}
+          >
+            <Feather
+              name="trash-2"
+              size={24}
+              color={!isButtonTreshActive ? colors.alt_text : colors.white}
+            />
           </Button>
         </TouchableOpacity>
       </View>
@@ -178,7 +218,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   fotoWork: {
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto-Regular",
     fontSize: fonts.normal,
     color: colors.text_gray,
   },
@@ -194,12 +234,12 @@ const styles = StyleSheet.create({
   },
   treshBtn: {
     alignItems: "center",
-    marginTop: 120,
+    marginTop: 30,
   },
 
   activateCameraText: {
     color: colors.text_gray,
     fontSize: fonts.normal,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto-Regular",
   },
 });

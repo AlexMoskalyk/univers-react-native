@@ -7,7 +7,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { colors } from "../../styles/global";
 import LogoutButton from "../components/LogoutButton";
 import { useDispatch } from "react-redux";
-import { logoutDB } from "../redux/reducers/authOperations";
+import { logoutDB } from "../redux/reducers/authentication/authOperations";
 
 const Tabs = createBottomTabNavigator();
 
@@ -56,7 +56,7 @@ const BottomTabNavigator = () => {
           ),
         })}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="Profile"
         component={ProfileScreen}
         options={({ navigation }) => ({
@@ -70,7 +70,7 @@ const BottomTabNavigator = () => {
             />
           ),
         })}
-      />
+      /> */}
     </Tabs.Navigator>
   );
 };

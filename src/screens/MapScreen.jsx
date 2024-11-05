@@ -5,6 +5,7 @@ import * as Location from "expo-location";
 import React, { useState, useEffect } from "react";
 import { colors } from "../../styles/global";
 
+//temporary mock location
 const MapScreen = ({ route }) => {
   const [location, setLocation] = useState(null);
   useEffect(() => {

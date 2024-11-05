@@ -64,12 +64,12 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   userName: {
-    fontFamily: "roboto-bold",
+    fontFamily: "Roboto-Bold",
     fontSize: fonts.medium,
     color: colors.black_primary,
   },
   userEmail: {
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto-Regular",
     fontSize: fonts.small,
     color: colors.black_primary,
   },
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   itemName: {
-    fontFamily: "roboto-medium",
+    fontFamily: "Roboto-Medium",
     fontSize: fonts.normal,
     color: colors.black_primary,
     marginBottom: 8,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   itemCommentNum: {
-    fontFamily: "roboto-medium",
+    fontFamily: "Roboto-Medium",
     fontSize: fonts.normal,
     color: colors.text_gray,
     marginLeft: 5,

@@ -16,8 +16,8 @@ import { useDispatch } from "react-redux";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { colors } from "../../styles/global";
-import { loginDB } from "../redux/reducers/authOperations";
+import { colors, fonts } from "../../styles/global";
+import { loginDB } from "../redux/reducers/authentication/authOperations";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -39,7 +39,6 @@ const LoginScreen = ({ navigation, route }) => {
       );
       reset();
     }
-    Alert.alert("Введіть ваші дані!",  [{ text: "Добре" }]);
   };
 
   const handleEmailChange = (value) => {

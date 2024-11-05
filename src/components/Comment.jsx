@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
     maxWidth: "70%",
   },
   text: {
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto-Regular",
     fontSize: fonts.medium,
   },
   textData: {
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto-Regular",
     fontSize: fonts.extraSmall,
     color: colors.alt_text,
   },

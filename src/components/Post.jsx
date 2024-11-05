@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   itemName: {
-    fontFamily: "roboto-medium",
+    fontFamily: "Roboto-Medium",
     fontSize: fonts.normal,
     color: colors.black_primary,
     marginBottom: 8,
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
     marginRight: 24,
   },
   itemCommentNum: {
-    fontFamily: "roboto-medium",
+    fontFamily: "Roboto-Medium",
     fontSize: fonts.normal,
     color: colors.alt_text,
     marginLeft: 5,
   },
   itemAddress: {
-    fontFamily: "roboto-medium",
+    fontFamily: "Roboto-Medium",
     fontSize: fonts.normal,
     color: colors.black_primary,
     marginLeft: 5,
