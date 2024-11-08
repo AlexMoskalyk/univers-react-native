@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
@@ -7,14 +7,20 @@ import {
   ImageBackground,
   Image,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 
 import { getPosts, toggleLike } from "../redux/reducers/posts/postOperations";
-import { logoutDB } from "../redux/reducers/authentication/authOperations";
+import {
+  logoutDB,
+  updateAvatarDB,
+} from "../redux/reducers/authentication/authOperations";
 import { selectUsersPosts } from "../redux/reducers/posts/postSelector";
 import Post from "../components/Post";
 import LogoutButton from "../components/LogoutButton";
-
+import AddAvatarImg from "../../assets/images/add.png";
 import { colors, fonts } from "../../styles/global";
 import ImageBG from "../../assets/images/PhotoBG.jpg";
 import { selectUser } from "../redux/reducers/authentication/authSelector";
@@ -25,6 +31,28 @@ const ProfileScreen = ({ navigation }) => {
   const userId = user.uid;
   const selectPostsByUserId = selectUsersPosts(userId);
   const posts = useSelector((state) => selectPostsByUserId(state));
+  const [newAvatarUri, setNewAvatarUri] = useState("");
+
+  const changeAvatar = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      return Toast.show({
+        type: "info",
+        text1: "Access to photos is required to update your avatar.",
+      });
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setNewAvatarUri(result.assets[0].uri);
+      dispatch(updateAvatarDB(result.assets[0].uri));
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logoutDB());
@@ -32,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch]);
+  }, [user.photo]);
 
   const handleLikeToggle = (postId) => {
     dispatch(toggleLike({ postId, userId }));
@@ -42,7 +70,18 @@ const ProfileScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground source={ImageBG} style={styles.imageBg}>
         <View style={styles.contentBox}>
-          <Image style={styles.avatarBox} source={{ uri: user.photoURL }} />
+          <View style={styles.avatarBox}>
+            <Image
+              style={styles.avatarImg}
+              source={{ uri: newAvatarUri ? newAvatarUri : user.photo }}
+            />
+            <TouchableOpacity
+              onPress={() => changeAvatar()}
+              style={styles.avatarAdd}
+            >
+              <Image style={styles.tinyLogo} source={AddAvatarImg} />
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.exitBtn}>
             <LogoutButton onPress={handleLogout} />
@@ -120,5 +159,21 @@ const styles = StyleSheet.create({
   fotoList: {
     width: "100%",
     height: 500,
+  },
+  avatarImg: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    position: "relative",
+  },
+  avatarAdd: {
+    position: "absolute",
+    left: 107,
+    top: 80,
+  },
+  avatarAdd: {
+    position: "absolute",
+    left: 107,
+    top: 80,
   },
 });

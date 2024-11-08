@@ -8,7 +8,6 @@ import {
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../../config";
-// import { auth, db, storage } from "../../../../config";
 
 export const registerDB = createAsyncThunk(
   "auth/signup",
@@ -37,7 +36,7 @@ export const registerDB = createAsyncThunk(
         photoURL: photoURL,
       });
 
-      return { email, displayName, userId: uid, photoURL };
+      return { email, displayName, userId: uid, photo: photoURL };
     } catch (error) {
       console.error("SIGNUP ERROR:", error.message);
       return thunkAPI.rejectWithValue(error.message);
@@ -59,7 +58,7 @@ export const loginDB = createAsyncThunk(
           email: userData.email,
           displayName: userData.displayName,
           userId: userData.userId,
-          photoURL: userData.photoURL,
+          photo: userData.photoURL,
         };
       } else {
         throw new Error("User data not found in Firestore.");
@@ -80,3 +79,34 @@ export const logoutDB = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+export const updateAvatarDB = createAsyncThunk(
+  "auth/updateAvatar",
+  async (newProfilePhoto, thunkAPI) => {
+    try {
+      const profileImg = await fetch(newProfilePhoto);
+      const bytes = await profileImg.blob();
+      const avatarUrl = `profiles/${Date.now()}`;
+      const avatarRef = ref(storage, avatarUrl);
+      await uploadBytes(avatarRef, bytes);
+      const newAvatarUrl = await getDownloadURL(avatarRef);
+
+      await updateProfile(auth.currentUser, {
+        photoURL: newAvatarUrl,
+      });
+
+      const { uid } = auth.currentUser;
+
+      await setDoc(
+        doc(db, "users", uid),
+        { photoURL: newAvatarUrl },
+        { merge: true }
+      );
+
+      return { photo: newAvatarUrl };
+    } catch (error) {
+      console.error("AVATAR UPDATE ERROR:", error.message);
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);

@@ -16,8 +16,6 @@ export const createPost = createAsyncThunk(
   "posts/create",
   async ({ userId, newPost }, thunkAPI) => {
     try {
-      console.log("newPost.imageUrl:", newPost.imageUrl);
-
       const img = await fetch(newPost.imageUrl);
       const bytes = await img.blob();
       const randomNumber = Date.now();

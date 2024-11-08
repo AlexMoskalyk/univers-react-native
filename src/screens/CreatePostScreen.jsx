@@ -79,6 +79,7 @@ const CreatePostsScreen = ({ navigation }) => {
       },
       imageUrl: photoUri,
       likes: 0,
+      likedBy: [],
       comments: [],
     };
     if (newPost.namePhoto && newPost.imageUrl && newPost.userId) {
@@ -105,9 +106,6 @@ const CreatePostsScreen = ({ navigation }) => {
         text2: "Всі поля повинні бути заповнені",
       });
     }
-
-    // dispatch(createPost({ userId, newPost }));
-    // reset();
   };
 
   return (

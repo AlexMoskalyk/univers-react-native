@@ -23,6 +23,7 @@ import { selectAuthError } from "../redux/reducers/authentication/authSelector";
 import AddAvatar from "../../assets/images/add.png";
 import { useDispatch, useSelector } from "react-redux";
 import { registerDB } from "../redux/reducers/authentication/authOperations";
+import AddAvatarImg from "../../assets/images/add.png";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -162,7 +163,7 @@ const RegistrationScreen = ({ navigation, route }) => {
               <Image style={styles.avatarImg} source={{ uri: profilePhoto }} />
 
               <TouchableOpacity onPress={addAvatar} style={styles.avatarAdd}>
-                <Image style={styles.tinyLogo} source={AddAvatar} />
+                <Image style={styles.tinyLogo} source={AddAvatarImg} />
               </TouchableOpacity>
             </View>
             <Text style={styles.title}>Реєстрація</Text>

@@ -31,7 +31,7 @@ const PostsScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch, user]);
+  }, []);
 
   const handleLikeToggle = (postId) => {
     dispatch(toggleLike({ postId, userId }));
@@ -40,7 +40,7 @@ const PostsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
-        <Image style={styles.userAvatar} source={{ uri: user.photoURL }} />
+        <Image style={styles.userAvatar} source={{ uri: user.photo }} />
         <View>
           <Text style={styles.userName}>{user.displayName}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>

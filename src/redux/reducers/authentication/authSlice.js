@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerDB, loginDB, logoutDB } from "./authOperations";
+import {
+  registerDB,
+  loginDB,
+  logoutDB,
+  updateAvatarDB,
+} from "./authOperations";
 
 const initialState = {
   user: { login: null, email: null, userId: "", photo: "" },
@@ -42,9 +47,16 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(logoutDB.fulfilled, (state) => {
-        state.user = { login: null, email: null, userId: "" };
+        state.user = { login: null, email: null, userId: "", photo: "" };
         state.isLogged = false;
         state.error = null;
+      })
+      .addCase(updateAvatarDB.fulfilled, (state, action) => {
+        state.user.photo = action.payload.photo;
+        state.error = null;
+      })
+      .addCase(updateAvatarDB.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });

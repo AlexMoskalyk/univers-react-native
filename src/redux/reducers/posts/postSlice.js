@@ -29,7 +29,8 @@ const postsSlice = createSlice({
         state.error = null;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.postsArray.push(action.payload);
+        const newPost = { ...action.payload, likes: [] };
+        state.postsArray.push(newPost);
         state.isLoading = false;
       })
       .addCase(createPost.rejected, (state, action) => {
@@ -56,15 +57,18 @@ const postsSlice = createSlice({
         state.error = null;
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
-        const { postId, userId } = action.payload;
-        const post = state.postsArray.find((post) => post.id === postId);
+        const post = state.postsArray.find(
+          (post) => post.id === action.payload.postId
+        );
         if (post) {
-          const likeIndex = post.likes.indexOf(userId);
-          if (likeIndex !== -1) {
-            post.likes.splice(likeIndex, 1);
+          post.likedBy = post.likedBy ?? [];
+          const userIndex = post.likedBy.indexOf(action.payload.userId);
+          if (userIndex !== -1) {
+            post.likedBy.splice(userIndex, 1);
           } else {
-            post.likes.push(userId);
+            post.likedBy.push(action.payload.userId);
           }
+          post.likes = post.likedBy.length;
         }
         state.isLoading = false;
       })
