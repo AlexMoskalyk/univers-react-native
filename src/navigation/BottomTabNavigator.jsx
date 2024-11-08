@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 import PostsScreen from "../screens/PostsScreen";
 import CreatePostScreen from "../screens/CreatePostScreen";
@@ -56,12 +56,10 @@ const BottomTabNavigator = () => {
           ),
         })}
       />
-      {/* <Tabs.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={({ navigation }) => ({
-          title: "Профіль",
-          tabBarShowLabel: false,
+
+      <Tabs.Screen
+        options={{
+          tabBarLabel: "",
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="person-outline"
@@ -69,8 +67,11 @@ const BottomTabNavigator = () => {
               color={focused ? `${colors.orange}` : `${colors.black_primary}`}
             />
           ),
-        })}
-      /> */}
+          headerShown: false,
+        }}
+        name="Profile"
+        component={ProfileScreen}
+      />
     </Tabs.Navigator>
   );
 };

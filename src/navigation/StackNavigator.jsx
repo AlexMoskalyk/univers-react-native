@@ -14,8 +14,6 @@ const StackNavigator = () => {
   const isUserLogged = useSelector((state) => state.auth.isLogged);
   const navigation = useNavigation();
 
-  console.log("USER", isUserLogged);
-
   useEffect(() => {
     if (isUserLogged) {
       navigation.navigate("Home");

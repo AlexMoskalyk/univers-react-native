@@ -15,7 +15,7 @@ const Posts = ({
   return (
     <View>
       <View style={styles.item}>
-        <Image style={styles.itemImg} source={postImg} />
+        <Image style={styles.itemImg} source={{ uri: postImg }} />
         <Text style={styles.itemName}>{postName}</Text>
       </View>
 

@@ -3,6 +3,7 @@ import { getPosts, createPost, addComment, toggleLike } from "./postOperations";
 
 const initialState = {
   postsArray: [],
+  error: null,
   isLoading: false,
 };
 
@@ -13,23 +14,27 @@ const postsSlice = createSlice({
     builder
       .addCase(getPosts.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(getPosts.fulfilled, (state, action) => {
         state.postsArray = action.payload ? [...action.payload] : [];
         state.isLoading = false;
       })
-      .addCase(getPosts.rejected, (state) => {
+      .addCase(getPosts.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(createPost.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.postsArray.push(action.payload);
         state.isLoading = false;
       })
-      .addCase(createPost.rejected, (state) => {
+      .addCase(createPost.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(addComment.pending, (state) => {
         state.isLoading = true;
@@ -42,11 +47,13 @@ const postsSlice = createSlice({
         }
         state.isLoading = false;
       })
-      .addCase(addComment.rejected, (state) => {
+      .addCase(addComment.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(toggleLike.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
         const { postId, userId } = action.payload;
@@ -61,8 +68,9 @@ const postsSlice = createSlice({
         }
         state.isLoading = false;
       })
-      .addCase(toggleLike.rejected, (state) => {
+      .addCase(toggleLike.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message;
       });
   },
 });

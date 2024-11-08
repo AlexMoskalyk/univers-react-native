@@ -13,7 +13,7 @@ const firebaseConfig = {
   authDomain: "univers-react-native.firebaseapp.com",
   projectId: "univers-react-native",
   storageBucket: "gs://univers-react-native.firebasestorage.app",
-  databaseURL: "<https://project-id.firebaseio.com>",
+  databaseURL: "<https://univers-react-native.firebaseio.com>",
   messagingSenderId: "97376624723",
 };
 

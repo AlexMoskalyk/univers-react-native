@@ -12,7 +12,9 @@ import {
   Platform,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthError } from "../redux/reducers/authentication/authSelector";
+import Toast from "react-native-toast-message";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -23,6 +25,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const LoginScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const errorMessage = useSelector(selectAuthError);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,8 +39,22 @@ const LoginScreen = ({ navigation, route }) => {
           inputEmail: email,
           inputPassword: password,
         })
-      );
-      reset();
+      ).then((response) => {
+        if (response.type === "auth/login/fulfilled") {
+          Toast.show({
+            type: "success",
+            text1: `${email}`,
+            text2: "Ви успішно увійшли!",
+          });
+          reset();
+        } else {
+          return Toast.show({
+            type: "error",
+            text1: "Щось пішло не так.",
+            text2: `${errorMessage}`,
+          });
+        }
+      });
     }
   };
 

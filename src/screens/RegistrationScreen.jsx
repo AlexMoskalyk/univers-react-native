@@ -13,12 +13,13 @@ import {
   Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { colors, fonts } from "../../styles/global";
 import { useEffect, useState } from "react";
-import ImageBG from "../../assets/images/PhotoBG.jpg";
+import { selectAuthError } from "../redux/reducers/authentication/authSelector";
 import AddAvatar from "../../assets/images/add.png";
 import { useDispatch, useSelector } from "react-redux";
 import { registerDB } from "../redux/reducers/authentication/authOperations";
@@ -34,6 +35,7 @@ const RegistrationScreen = ({ navigation, route }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [isButtonActive, setButtonActive] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const errorMessage = useSelector(selectAuthError);
 
   const handleEmailChange = (value) => {
     setEmail(value);
@@ -63,8 +65,17 @@ const RegistrationScreen = ({ navigation, route }) => {
 
   const signUp = () => {
     if (!profilePhoto) {
-      Alert.alert("Аватар є обовязковою");
-      return;
+      return Toast.show({
+        type: "info",
+        text1: "Аватар є обовязковим",
+      });
+    }
+
+    if (!email && !password && !name) {
+      return Toast.show({
+        type: "info",
+        text1: "Всі поля повинни бути заповненні обовязково.",
+      });
     }
 
     if (email && password && name && profilePhoto) {
@@ -75,8 +86,24 @@ const RegistrationScreen = ({ navigation, route }) => {
           inputLogin: name,
           profilePhoto,
         })
-      );
-      reset();
+      ).then((response) => {
+        console.log("Response Type:", response.type);
+
+        if (response.type === "auth/signup/fulfilled") {
+          Toast.show({
+            type: "success",
+            text1: `${name}`,
+            text2: "Ви успішно зареєструвались!",
+          });
+          reset();
+        } else {
+          return Toast.show({
+            type: "error",
+            text1: "Щось пішло не так.",
+            text2: `${errorMessage}`,
+          });
+        }
+      });
     }
   };
 
@@ -85,8 +112,10 @@ const RegistrationScreen = ({ navigation, route }) => {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("Ви відмовилися від доступ до ваших фотографій!");
-      return;
+      return Toast.show({
+        type: "info",
+        text1: "Ви відмовилися від доступ до ваших фотографій!",
+      });
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({

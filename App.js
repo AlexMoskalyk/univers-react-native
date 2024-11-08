@@ -9,6 +9,7 @@ import { Provider, useDispatch } from "react-redux";
 import store from "./src/redux/store/store";
 import { authStateChanged } from "./src/utils/auth";
 import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -45,6 +46,7 @@ const AuthListener = () => {
   return (
     <NavigationContainer>
       <StackNavigator />
+      <Toast />
     </NavigationContainer>
   );
 };

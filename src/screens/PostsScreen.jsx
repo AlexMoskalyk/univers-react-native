@@ -1,41 +1,82 @@
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Toast from "react-native-toast-message";
+
 import { colors, fonts } from "../../styles/global";
 import Post from "../components/Post";
 import postData from "../../assets/data/postData";
+import {
+  selectAllPosts,
+  selectIsLoading,
+  selectPostError,
+} from "../redux/reducers/posts/postSelector";
+import { getPosts, toggleLike } from "../redux/reducers/posts/postOperations";
+import { selectUser } from "../redux/reducers/authentication/authSelector";
 
 const PostsScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const posts = useSelector(selectAllPosts);
+  const user = useSelector(selectUser);
+  const isLoading = useSelector(selectIsLoading);
+  const userId = user.uid;
+  const error = useSelector(selectPostError);
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch, user]);
+
+  const handleLikeToggle = (postId) => {
+    dispatch(toggleLike({ postId, userId }));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
-        <Image
-          style={styles.userAvatar}
-          source={require("../../assets/images/User.png")}
-        />
+        <Image style={styles.userAvatar} source={{ uri: user.photoURL }} />
         <View>
-          <Text style={styles.userName}>Rick Morty</Text>
-          <Text style={styles.userEmail}>email@example.com</Text>
+          <Text style={styles.userName}>{user.displayName}</Text>
+          <Text style={styles.userEmail}>{user.email}</Text>
         </View>
       </View>
 
       <View style={styles.fotoList}>
-        <FlatList
-          data={postData}
-          renderItem={({ item }) => (
-            <Post
-              onPressComment={() =>
-                navigation.navigate("Comment", { postImg: item.postImg })
-              }
-              onPressMap={() =>
-                navigation.navigate("Maps", { location: item.location })
-              }
-              postImg={item.postImg}
-              postName={item.postName}
-              postComment={item.postComment}
-              location={item.location}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
+        {error && <Text>error:{`${error}`}</Text>}
+        {isLoading && (
+          <ActivityIndicator
+            size="150"
+            style={styles.loaders}
+            color={colors.orange}
+          />
+        )}
+        {!isLoading > 0 && (
+          <FlatList
+            data={posts}
+            renderItem={({ item }) => (
+              <Post
+                onPressComment={() =>
+                  navigation.navigate("Comment", { postId: item.id })
+                }
+                onPressLike={() => handleLikeToggle(item.id)}
+                onPressMap={() => navigation.navigate("Maps", { posts })}
+                postImg={item.imageUrl}
+                postName={item.namePhoto}
+                postComment={item.comments.length}
+                location={item.location.name}
+                postLike={item.likes}
+                isLiked={item.likedBy && item.likedBy.includes(userId)}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </View>
     </View>
   );

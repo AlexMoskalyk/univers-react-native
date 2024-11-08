@@ -8,6 +8,8 @@ import {
   Alert,
   Image,
 } from "react-native";
+import Toast from "react-native-toast-message";
+
 import { colors, fonts } from "../../styles/global";
 import InputsCreate from "../components/InputsCreate";
 import Button from "../components/Button";
@@ -15,7 +17,10 @@ import PhotoCamera from "../components/PhotoCamera";
 import GalleryModal from "../components/GalleryModal";
 import LocationFetcher from "../components/PhotoLocation";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../redux/reducers/authentication/authSelector";
+import {
+  selectUser,
+  selectAuthError,
+} from "../redux/reducers/authentication/authSelector";
 import { createPost } from "../redux/reducers/posts/postOperations";
 
 const CreatePostsScreen = ({ navigation }) => {
@@ -31,6 +36,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const userId = user.uid;
+  const errorMessage = useSelector(selectAuthError);
 
   const handleNameChange = (value) => {
     setNamePhoto(value);
@@ -75,9 +81,33 @@ const CreatePostsScreen = ({ navigation }) => {
       likes: 0,
       comments: [],
     };
+    if (newPost.namePhoto && newPost.imageUrl && newPost.userId) {
+      dispatch(createPost({ userId, newPost })).then((response) => {
+        if (response.type === "posts/create/fulfilled") {
+          Toast.show({
+            type: "success",
+            text1: "Пост успішно додано",
+          });
+          navigation.navigate("Posts");
+          reset();
+        } else {
+          return Toast.show({
+            type: "error",
+            text1: "Щось пішло не так.",
+            text2: `${errorMessage}`,
+          });
+        }
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Помилка.",
+        text2: "Всі поля повинні бути заповнені",
+      });
+    }
 
-    dispatch(createPost({ userId, newPost }));
-    reset();
+    // dispatch(createPost({ userId, newPost }));
+    // reset();
   };
 
   return (
