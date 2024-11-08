@@ -7,7 +7,12 @@ import {
 } from "./authOperations";
 
 const initialState = {
-  user: { login: null, email: null, userId: "", photo: "" },
+  user: {
+    login: null,
+    email: null,
+    userId: "",
+    photoURL: "../../../../assets/images/no-avatar.jpg",
+  },
   error: null,
   isLogged: false,
 };
@@ -17,7 +22,12 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearUserInfo(state) {
-      state.user = { login: null, email: null, userId: "", photo: "" };
+      state.user = {
+        login: null,
+        email: null,
+        userId: "",
+        photoURL: "../../../../assets/images/no-avatar.jpg",
+      };
       state.isLogged = false;
     },
 
@@ -47,12 +57,17 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(logoutDB.fulfilled, (state) => {
-        state.user = { login: null, email: null, userId: "", photo: "" };
+        state.user = {
+          login: null,
+          email: null,
+          userId: "",
+          photoURL: "../../../../assets/images/no-avatar.jpg",
+        };
         state.isLogged = false;
         state.error = null;
       })
       .addCase(updateAvatarDB.fulfilled, (state, action) => {
-        state.user.photo = action.payload.photo;
+        state.user.photoURL = action.payload.photoURL;
         state.error = null;
       })
       .addCase(updateAvatarDB.rejected, (state, action) => {

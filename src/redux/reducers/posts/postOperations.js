@@ -107,7 +107,7 @@ export const toggleLike = createAsyncThunk(
       }
 
       const postData = postSnapshot.data();
-      const likedBy = postData.likedBy || [];
+      const likedBy = Array.isArray(postData.likedBy) ? postData.likedBy : [];
 
       if (likedBy.includes(userId)) {
         await updateDoc(postRef, {

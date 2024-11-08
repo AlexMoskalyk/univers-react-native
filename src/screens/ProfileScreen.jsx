@@ -17,7 +17,10 @@ import {
   logoutDB,
   updateAvatarDB,
 } from "../redux/reducers/authentication/authOperations";
-import { selectUsersPosts } from "../redux/reducers/posts/postSelector";
+import {
+  selectAllPosts,
+  selectUsersPosts,
+} from "../redux/reducers/posts/postSelector";
 import Post from "../components/Post";
 import LogoutButton from "../components/LogoutButton";
 import AddAvatarImg from "../../assets/images/add.png";
@@ -29,8 +32,9 @@ const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const userId = user.uid;
-  const selectPostsByUserId = selectUsersPosts(userId);
-  const posts = useSelector((state) => selectPostsByUserId(state));
+
+  const allPosts = useSelector(selectAllPosts);
+  const currentUserPosts = allPosts.filter((post) => post.userId === userId);
   const [newAvatarUri, setNewAvatarUri] = useState("");
 
   const changeAvatar = async () => {
@@ -73,7 +77,7 @@ const ProfileScreen = ({ navigation }) => {
           <View style={styles.avatarBox}>
             <Image
               style={styles.avatarImg}
-              source={{ uri: newAvatarUri ? newAvatarUri : user.photo }}
+              source={{ uri: newAvatarUri ? newAvatarUri : user.photoURL }}
             />
             <TouchableOpacity
               onPress={() => changeAvatar()}
@@ -90,9 +94,9 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={styles.contentTitle}>{user.displayName}</Text>
 
           <View style={styles.fotoList}>
-            {posts.length > 0 && (
+            {currentUserPosts.length > 0 && (
               <FlatList
-                data={posts}
+                data={currentUserPosts}
                 renderItem={({ item }) => (
                   <Post
                     onPressComment={() =>
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     width: "100%",
-    height: 665,
+    height: "80%",
     backgroundColor: colors.white,
     marginTop: "auto",
     borderTopLeftRadius: 25,

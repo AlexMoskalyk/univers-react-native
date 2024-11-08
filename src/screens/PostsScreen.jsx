@@ -26,7 +26,7 @@ const PostsScreen = ({ navigation }) => {
   const posts = useSelector(selectAllPosts);
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectIsLoading);
-  const userId = user.uid;
+  const userId = user.userId;
   const error = useSelector(selectPostError);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const PostsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
-        <Image style={styles.userAvatar} source={{ uri: user.photo }} />
+        <Image style={styles.userAvatar} source={{ uri: user.photoURL }} />
         <View>
           <Text style={styles.userName}>{user.displayName}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>

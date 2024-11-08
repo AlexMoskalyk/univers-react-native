@@ -36,7 +36,7 @@ export const registerDB = createAsyncThunk(
         photoURL: photoURL,
       });
 
-      return { email, displayName, userId: uid, photo: photoURL };
+      return { email, displayName, userId: uid, photoURL };
     } catch (error) {
       console.error("SIGNUP ERROR:", error.message);
       return thunkAPI.rejectWithValue(error.message);
@@ -58,7 +58,7 @@ export const loginDB = createAsyncThunk(
           email: userData.email,
           displayName: userData.displayName,
           userId: userData.userId,
-          photo: userData.photoURL,
+          photoURL: userData.photoURL,
         };
       } else {
         throw new Error("User data not found in Firestore.");
@@ -103,7 +103,7 @@ export const updateAvatarDB = createAsyncThunk(
         { merge: true }
       );
 
-      return { photo: newAvatarUrl };
+      return { photoURL: newAvatarUrl };
     } catch (error) {
       console.error("AVATAR UPDATE ERROR:", error.message);
       return thunkAPI.rejectWithValue(error.message);

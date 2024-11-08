@@ -82,6 +82,7 @@ const CreatePostsScreen = ({ navigation }) => {
       likedBy: [],
       comments: [],
     };
+
     if (newPost.namePhoto && newPost.imageUrl && newPost.userId) {
       dispatch(createPost({ userId, newPost })).then((response) => {
         if (response.type === "posts/create/fulfilled") {
@@ -100,6 +101,9 @@ const CreatePostsScreen = ({ navigation }) => {
         }
       });
     } else {
+      console.log("newPost.namePhoto:", newPost.namePhoto);
+      console.log("newPost.imageUrl:", newPost.imageUrl);
+      console.log("newPost.userId:", newPost.userId);
       Toast.show({
         type: "error",
         text1: "Помилка.",
@@ -179,7 +183,6 @@ const CreatePostsScreen = ({ navigation }) => {
 
         <Button
           onPress={() => {
-            navigation.navigate("Posts");
             onSubmit();
           }}
           buttonSize="large"
